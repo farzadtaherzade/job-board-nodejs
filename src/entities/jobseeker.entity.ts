@@ -17,7 +17,7 @@ export class JobSeeker extends BaseEntity {
   eduction!: Education;
 
   @Property({ type: "string" })
-  profile_image!: string;
+  profileImage!: string;
 
   @Property({ type: "string" })
   resume!: string;

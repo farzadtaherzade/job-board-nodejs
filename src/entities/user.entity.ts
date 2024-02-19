@@ -12,13 +12,13 @@ export enum Role {
 
 @Entity()
 export class User extends BaseEntity {
-  @Property({ type: "string" })
+  @Property({ type: "string", unique: true })
   email!: string;
 
-  @Property({ type: "string" })
+  @Property({ type: "string", unique: true })
   username!: string;
 
-  @Property({ type: "integer" })
+  @Property({ type: "integer", unique: true })
   phone!: number;
 
   @Property({ type: "string" })

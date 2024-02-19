@@ -4,16 +4,13 @@ import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
 import router from "./routes/app.routes";
 import { MikroORM, RequestContext } from "@mikro-orm/postgresql";
+import { initializeORM } from "./config/database";
 
 async function bootstrap() {
   const app: Application = express();
   const port = process.env.PORT || 6000;
 
-  const orm = await MikroORM.init({
-    dbName: "job-node",
-    password: "1234",
-    entities: [__dirname + "/**/*.entity.ts"],
-  });
+  const orm = await initializeORM(__dirname);
   console.log(orm.em);
 
   // middleware

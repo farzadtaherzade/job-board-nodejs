@@ -1,6 +1,7 @@
 import { Entity, OneToOne, Property } from "@mikro-orm/core";
 import { BaseEntity } from "./base.entity";
 import { User } from "./user.entity";
+import { Company } from "./company.entity";
 
 @Entity()
 export class Employer extends BaseEntity {
@@ -12,4 +13,7 @@ export class Employer extends BaseEntity {
 
   @OneToOne({ entity: () => User, nullable: true })
   user!: User;
+
+  @OneToOne({ entity: () => Company, nullable: true })
+  company: Company;
 }
