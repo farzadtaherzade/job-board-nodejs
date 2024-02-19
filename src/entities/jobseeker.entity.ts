@@ -2,19 +2,6 @@ import { ArrayType, Entity, Enum, OneToOne, Property } from "@mikro-orm/core";
 import { BaseEntity } from "./base.entity";
 import { User } from "./user.entity";
 
-export interface Project {
-  title: string;
-  short_description: string;
-  link: string;
-}
-
-enum Education {
-  Diploma = "دیپلم",
-  Bachelor = "کارشناسی",
-  Master = "ارشد",
-  Doctorate = "دکتری",
-}
-
 @Entity()
 export class JobSeeker extends BaseEntity {
   @Property({ type: "string" })
@@ -23,11 +10,11 @@ export class JobSeeker extends BaseEntity {
   @Property({ type: "string" })
   lastname!: string;
 
-  @Property({ type: "int" })
+  @Property({ type: "integer" })
   age!: number;
 
-  @Enum({ items: () => Education, nullable: false })
-  eduction!: string;
+  @Enum({ items: () => Education, type: "enum", nullable: true })
+  eduction!: Education;
 
   @Property({ type: "string" })
   profile_image!: string;
@@ -52,4 +39,17 @@ export class JobSeeker extends BaseEntity {
 
   @OneToOne({ entity: () => User })
   user!: User;
+}
+
+export interface Project {
+  title: string;
+  short_description: string;
+  link: string;
+}
+
+export enum Education {
+  DIPLOMA = "دیپلم",
+  BACHELOR = "کارشناسی",
+  MASTER = "ارشد",
+  DOCTORATE = "دکتری",
 }

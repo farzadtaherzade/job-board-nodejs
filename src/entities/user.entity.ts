@@ -24,7 +24,7 @@ export class User extends BaseEntity {
   @Property({ type: "string" })
   password!: string;
 
-  @Enum({ items: () => Role, nullable: false })
+  @Enum({ items: () => Role, type: "enum", nullable: false })
   role!: Role;
 
   @OneToOne({ entity: () => Employer, nullable: true })

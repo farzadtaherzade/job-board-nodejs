@@ -10,6 +10,6 @@ export class Employer extends BaseEntity {
   @Property({ type: "string" })
   lastname!: string;
 
-  @OneToOne({ entity: () => User })
+  @OneToOne({ entity: () => User, nullable: true })
   user!: User;
 }
