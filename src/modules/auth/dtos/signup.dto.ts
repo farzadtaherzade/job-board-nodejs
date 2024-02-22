@@ -1,13 +1,16 @@
+import { Role } from "@prisma/client";
 import {
+  IsDefined,
   IsEmail,
+  IsEnum,
   IsMobilePhone,
   IsNotEmpty,
-  IsNumber,
   IsString,
   IsStrongPassword,
+  MaxLength,
 } from "class-validator";
 
-export class CreateUserDto {
+export class SignupDto {
   @IsEmail()
   @IsString()
   @IsNotEmpty()
@@ -22,7 +25,12 @@ export class CreateUserDto {
   password: string;
 
   @IsNotEmpty()
-  @IsNumber()
   @IsMobilePhone("fa-IR")
   phone: string;
+
+  @IsEnum({
+    JOBSEEKE: Role.JOBSEEKER,
+    EMPLOYER: Role.EMPLOYER,
+  })
+  role: Role;
 }

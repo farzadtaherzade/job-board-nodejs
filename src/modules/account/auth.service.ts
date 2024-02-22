@@ -1,3 +1,0 @@
-class AccountService {
-  async createUser() {}
-}
