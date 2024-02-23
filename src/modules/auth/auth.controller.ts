@@ -30,13 +30,30 @@ export class AuthController {
   async signin(req: Request, res: Response, next: NextFunction) {
     try {
       const signinDto: SigninDto = req.body;
-      const message: string = await authService.signin(signinDto);
+      const data = await authService.signin(signinDto);
       return res
         .status(200)
-        .json(ResponseHandler(StatusCodes.OK, true, message, null));
+        .json(ResponseHandler(StatusCodes.OK, true, data, null));
     } catch (error) {
       next(error);
     }
   }
-  async checkOtp(req: Request, res: Response, next: NextFunction) {}
+  async refreshToken(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { token }: { token: string } = req.body;
+      if (!token)
+        throw ResponseHandler(
+          StatusCodes.BAD_REQUEST,
+          false,
+          null,
+          "token must be provided"
+        );
+      const data = await authService.refreshToken(token);
+      return res
+        .status(200)
+        .json(ResponseHandler(StatusCodes.OK, true, data, null));
+    } catch (error) {
+      next(error);
+    }
+  }
 }

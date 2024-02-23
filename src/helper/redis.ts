@@ -2,7 +2,7 @@ import { client } from "../main";
 
 export const setValueToRedis = async (
   key: string,
-  value: number,
+  value: any,
   duration: number
 ) => {
   const result = await client.set(key, value, { EX: duration * 60 });

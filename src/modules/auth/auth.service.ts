@@ -1,3 +1,4 @@
+import { getValueFromRedis } from "./../../helper/redis";
 import { User } from "@prisma/client";
 import { AccountService } from "../account/account.service";
 import { SigninDto } from "./dtos/signin.dto";
@@ -7,6 +8,11 @@ import ResponseHandler from "../../helper/response";
 import { StatusCodes } from "http-status-codes";
 import { sendOtp } from "../../helper/sendOtp";
 import { getTtlOfKey } from "../../helper/redis";
+import {
+  signRefreshToken,
+  signToken,
+  verifyRefreshToken,
+} from "../../helper/jwt";
 
 const accountService = new AccountService();
 
@@ -17,7 +23,7 @@ export class AuthService {
     const user = await accountService.createUser(signupDto);
     return "created";
   }
-  async signin(signinDto: SigninDto): Promise<string> {
+  async signin(signinDto: SigninDto) {
     const ex_otp: any = process.env.EXPIRED_OTP_TIME;
     const error = ResponseHandler(
       StatusCodes.BAD_REQUEST,
@@ -33,7 +39,18 @@ export class AuthService {
     );
     if (!comparePassword) throw error;
     if (signinDto.otp) {
-      
+      const otp = await getValueFromRedis(user.email);
+      if (otp == signinDto.otp) {
+        const accessToken = signToken({ email: user.email, sub: user.id });
+        const refreshToken = await signRefreshToken({
+          email: user.email,
+          sub: user.id,
+        });
+        return {
+          accessToken,
+          refreshToken,
+        };
+      }
     }
     const sendOtpResult = await sendOtp(user.email);
     if (sendOtpResult === 0) {
@@ -45,4 +62,20 @@ export class AuthService {
 
     return "otp sended successfully";
   }
+
+  async refreshToken(token: string) {
+    const user: User | null = await verifyRefreshToken(token);
+    const accessToken = signToken({ email: user!.email, sub: user!.id });
+    const refreshToken = await signRefreshToken({
+      email: user!.email,
+      sub: user!.id,
+    });
+    return {
+      accessToken,
+      refreshToken,
+    };
+  }
 }
+
+// "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZhcnphZHBzNDRnYW1lQGdtYWlsLmNvbSIsInN1YiI6MSwiaWF0IjoxNzA4NjU0NDU2LCJleHAiOjE3MDg2NTgwNTZ9.WSftLNLZ4Qbbw3UFJuY0M6Vw0YpUnabZtoxMRFQLFvg",
+// "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZhcnphZHBzNDRnYW1lQGdtYWlsLmNvbSIsInN1YiI6MSwiaWF0IjoxNzA4NjU0NDU2LCJleHAiOjE3MDk1MTg0NTZ9.UDVBeafSwi4xI8W-dvEZ_Xg_rY3ZOISJDdfBcd5I_G8"
