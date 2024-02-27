@@ -1,5 +1,5 @@
 import { getValueFromRedis } from "./../../helper/redis";
-import { User } from "@prisma/client";
+import { Role, User } from "@prisma/client";
 import { AccountService } from "../account/account.service";
 import { SigninDto } from "./dtos/signin.dto";
 import { SignupDto } from "./dtos/signup.dto";
@@ -23,7 +23,7 @@ export class AuthService {
     const user = await accountService.createUser(signupDto);
     return "created";
   }
-  async signin(signinDto: SigninDto) {
+  async signin(signinDto: SigninDto, role: Role) {
     const ex_otp: any = process.env.EXPIRED_OTP_TIME;
     const error = ResponseHandler(
       StatusCodes.BAD_REQUEST,
@@ -31,7 +31,7 @@ export class AuthService {
       null,
       "email or password is wrong"
     );
-    const user = await accountService.findUserByEmail(signinDto.email);
+    const user = await accountService.findUserByEmailAndRole(signinDto.email);
     if (!user) throw error;
     const comparePassword = bcrypt.compareSync(
       signinDto.password,

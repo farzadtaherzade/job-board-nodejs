@@ -11,6 +11,7 @@ export class AuthController {
   async signup(req: Request, res: Response, next: NextFunction) {
     try {
       const signupDto: SignupDto = req.body;
+      signupDto.role = "JOBSEEKER";
       await authService.signup(signupDto);
       return res
         .status(StatusCodes.OK)
@@ -30,7 +31,7 @@ export class AuthController {
   async signin(req: Request, res: Response, next: NextFunction) {
     try {
       const signinDto: SigninDto = req.body;
-      const data = await authService.signin(signinDto);
+      const data = await authService.signin(signinDto, "JOBSEEKER");
       return res
         .status(200)
         .json(ResponseHandler(StatusCodes.OK, true, data, null));
@@ -38,6 +39,38 @@ export class AuthController {
       next(error);
     }
   }
+  async signupEmployers(req: Request, res: Response, next: NextFunction) {
+    try {
+      const signupDto: SignupDto = req.body;
+      signupDto.role = "EMPLOYER";
+      await authService.signup(signupDto);
+      return res
+        .status(StatusCodes.OK)
+        .json(
+          ResponseHandler(
+            StatusCodes.OK,
+            true,
+            "your account created successfully. go and signin!",
+            null
+          )
+        );
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async signinEmployers(req: Request, res: Response, next: NextFunction) {
+    try {
+      const signinDto: SigninDto = req.body;
+      const data = await authService.signin(signinDto, "EMPLOYER");
+      return res
+        .status(200)
+        .json(ResponseHandler(StatusCodes.OK, true, data, null));
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async refreshToken(req: Request, res: Response, next: NextFunction) {
     try {
       const { token }: { token: string } = req.body;

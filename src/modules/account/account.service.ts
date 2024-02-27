@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, User } from "@prisma/client";
+import { Prisma, PrismaClient, Role, User } from "@prisma/client";
 import { CreateUserDto } from "./dtos/createUser.dto";
 import { StatusCodes } from "http-status-codes";
 import ResponseHandler from "../../helper/response";
@@ -27,17 +27,28 @@ export class AccountService {
       });
     return user;
   }
+  async getMe(user: User) {
+    return user;
+  }
 
-  async findUserByEmail(email: string) {
+  // helper funciton
+  async findUserByEmailAndRole(email: string, role?: Role) {
     const user = await prisma.user.findFirst({
       where: {
         email,
+        role,
       },
     });
 
     return user;
   }
-  async findUserById() {}
+  async findUserById(id: number) {
+    const user = await prisma.user.findFirst({
+      where: {
+        id,
+      },
+    });
+  }
 }
 
 export const accountService: AccountService = new AccountService();

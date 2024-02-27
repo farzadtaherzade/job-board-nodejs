@@ -1,13 +1,11 @@
 import { Role } from "@prisma/client";
 import {
-  IsDefined,
   IsEmail,
   IsEnum,
   IsMobilePhone,
   IsNotEmpty,
   IsString,
   IsStrongPassword,
-  MaxLength,
 } from "class-validator";
 
 export class SignupDto {
