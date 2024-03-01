@@ -1,4 +1,4 @@
-import { ClientResponse } from "../error/clientResponse";
+import { ClientResponse } from "../exeptions/clientResponse";
 
 const ResponseHandler = (
   statusCode: number,

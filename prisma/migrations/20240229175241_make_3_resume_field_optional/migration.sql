@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "resume" ALTER COLUMN "firstname" DROP NOT NULL,
+ALTER COLUMN "lastname" DROP NOT NULL,
+ALTER COLUMN "age" DROP NOT NULL;

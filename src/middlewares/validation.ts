@@ -1,7 +1,7 @@
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { NextFunction, Request, Response } from "express";
-import { ClientError } from "../error/clientError";
+import { ClientError } from "../exeptions/clientError";
 
 const ValidateBody = (validationSchema: any) => {
   return async (req: Request, res: Response, next: NextFunction) => {

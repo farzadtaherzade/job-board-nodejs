@@ -22,12 +22,17 @@ export const signRefreshToken = async (payload: Ipayload) => {
   const token = jwt.sign(payload, process.env.REFRESH_SECRET_KEY!, {
     expiresIn: "10d",
   });
-  await setValueToRedis(`${payload.email}`, token, 10 * 60 * 60);
+  await setValueToRedis(`${payload.sub}`, token, 10 * 60 * 60);
   return token;
 };
 
-export const verifyRefreshToken = async (token: string) => {
-  const { sub } = jwt.verify(token, process.env.REFRESH_SECRET_KEY!);
+export const verifyRefreshToken = async (
+  token: string
+): Promise<User | null> => {
+  const { sub } = jwt.verify(
+    token,
+    process.env.REFRESH_SECRET_KEY!
+  ) as jwt.JwtPayload;
   const user: User | null = await prisma.user.findUnique({
     where: {
       id: Number(sub),
@@ -40,8 +45,11 @@ export const verifyRefreshToken = async (token: string) => {
       null,
       "login to your account"
     );
-  const refreshToken: string = await getValueFromRedis(user.email);
-  if (token === refreshToken) return user;
+  const refreshToken: string | number = await getValueFromRedis(`${user.id}`);
+  console.log(refreshToken);
+  console.log("refreshToken : ", refreshToken);
+  console.log("recive token : ", token);
+  if (token == refreshToken) return user;
   throw ResponseHandler(
     StatusCodes.UNAUTHORIZED,
     false,

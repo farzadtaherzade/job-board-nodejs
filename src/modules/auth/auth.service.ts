@@ -53,6 +53,7 @@ export class AuthService {
       }
     }
     const sendOtpResult = await sendOtp(user.email);
+    console.log(sendOtpResult);
     if (sendOtpResult === 0) {
       const ttl = await getTtlOfKey(user.email);
       return `code already send to your account! code was sended ${

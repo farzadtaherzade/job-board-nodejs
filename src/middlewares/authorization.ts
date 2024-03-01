@@ -5,24 +5,17 @@ import ResponseHandler from "../helper/response";
 import { StatusCodes } from "http-status-codes";
 const prisma = new PrismaClient();
 
-interface IRequest extends Request {
-  [x: string]: any;
-  req: {
-    user: User;
-  };
-}
-
-export const Authorization = (
-  req: IRequest,
+export const Authorization = async (
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const authorization = req.headers.authorization;
-  const [bearer, token] = authorization?.split(" ") || [];
   try {
+    const authorization = req.headers.authorization;
+    const [bearer, token] = authorization?.split(" ") || [];
     if (token) {
       const { sub } = jwt.verify(token, process.env.JWT_SECRET_KEY!);
-      const user = prisma.user.findUnique({
+      const user = await prisma.user.findUnique({
         where: {
           id: Number(sub),
         },
@@ -35,9 +28,14 @@ export const Authorization = (
           "login to your account"
         );
       req.user = user;
-      next();
+      return next();
     }
-    next();
+    throw ResponseHandler(
+      StatusCodes.UNAUTHORIZED,
+      false,
+      null,
+      "login to your account"
+    );
   } catch (error) {
     next(error);
   }

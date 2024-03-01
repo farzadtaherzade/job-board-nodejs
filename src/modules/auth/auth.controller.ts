@@ -33,7 +33,7 @@ export class AuthController {
       const signinDto: SigninDto = req.body;
       const data = await authService.signin(signinDto, "JOBSEEKER");
       return res
-        .status(200)
+        .status(StatusCodes.OK)
         .json(ResponseHandler(StatusCodes.OK, true, data, null));
     } catch (error) {
       next(error);

@@ -23,7 +23,7 @@ model User {
 
   employer Employer?
 
-  jobSeeker JobSeeker?
+  resume Resume?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
@@ -67,24 +67,24 @@ model Company {
   @@map("company")
 }
 
-model JobSeeker {
+model Resume {
   id                Int      @id @default(autoincrement())
-  firstname         String
-  lastname          String
-  age               Int
+  firstname         String?
+  lastname          String?
+  age               Int?
   eduction          String?
-  profile_image     String
-  resume            String
+  profile_image     String?
+  resume            String?
   skills            String[]
-  address           String
+  neighbourhood     String?
   projects          String[]
-  desired_job_title String
-  location          String
+  desired_job_title String?
+  location          String?
   user              User     @relation(fields: [userId], references: [id])
   userId            Int      @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
 
-  @@map("job_seeker")
+  @@map("resume")
 }
