@@ -36,4 +36,43 @@ export class AccountController {
       next(error);
     }
   }
+
+  async uploadProfile(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user: User | undefined = req.user;
+      const file: Express.Multer.File | undefined = req.file;
+      const uploadProfile = await accountService.uploadProfile(user!, file!);
+      return res
+        .status(StatusCodes.OK)
+        .json(ResponseHandler(StatusCodes.OK, true, uploadProfile, null));
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async uploadResume(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user: User | undefined = req.user;
+      const file: Express.Multer.File | undefined = req.file;
+      const uploadResume = await accountService.uploadResume(user!, file!);
+      return res
+        .status(StatusCodes.OK)
+        .json(ResponseHandler(StatusCodes.OK, true, uploadResume, null));
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // get resume info
+  async getResume(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user: User | undefined = req.user;
+      const resume = await accountService.getResume(user!);
+      return res
+        .status(StatusCodes.OK)
+        .json(ResponseHandler(StatusCodes.OK, true, resume, null));
+    } catch (error) {
+      next(error);
+    }
+  }
 }

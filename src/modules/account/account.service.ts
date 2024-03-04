@@ -1,12 +1,71 @@
-import { Prisma, PrismaClient, Role, User } from "@prisma/client";
+import { Prisma, PrismaClient, Resume, Role, User } from "@prisma/client";
 import { CreateUserDto } from "./dtos/createUser.dto";
 import { StatusCodes } from "http-status-codes";
 import ResponseHandler from "../../helper/response";
 import { UpdateResumeDto } from "./dtos/updateResume.dto";
+import { generateRandomFileName } from "../../helper/functions";
+import path from "path";
+import cloudinary from "../../config/cloudinary";
+import {
+  deleteResourceToCloudinary,
+  getResourceToCloudinary,
+  uploadToCloudinary,
+} from "../../helper/uploadCloudinary";
 
 const prisma = new PrismaClient();
 
 export class AccountService {
+  async uploadResume(user: User, file: Express.Multer.File) {
+    const resume = await this.findResumeByUserId(user.id);
+    if (!resume)
+      throw ResponseHandler(
+        StatusCodes.BAD_REQUEST,
+        false,
+        null,
+        "before upload your self made resume. go update resume info in our website"
+      );
+    const uploadResult: string = await uploadToCloudinary(file.path, "resume");
+    if (!uploadResult)
+      throw ResponseHandler(
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        false,
+        null,
+        "upload resume failed"
+      );
+    const updateResume = await prisma.resume.update({
+      where: {
+        userId: user.id,
+      },
+      data: {
+        resume: uploadResult,
+      },
+    });
+    const deleteResouce = await deleteResourceToCloudinary(resume.resume);
+    return "upload resume";
+  }
+  async uploadProfile(user: User, file: Express.Multer.File) {
+    const resume = await this.findResumeByUserId(user.id);
+    if (!resume)
+      throw ResponseHandler(
+        StatusCodes.BAD_REQUEST,
+        false,
+        null,
+        "before upload your self made resume. go update resume info in our website"
+      );
+    const result: string = await uploadToCloudinary(file.path, "profile");
+    const updateResume = await prisma.resume.update({
+      where: {
+        userId: user.id,
+      },
+      data: {
+        profile_image: result,
+      },
+    });
+    const deleteResouce = await deleteResourceToCloudinary(
+      resume.profile_image
+    );
+    return "upload profile";
+  }
   async createUser(createUserDto: CreateUserDto) {
     const user = await prisma.user
       .create({
@@ -29,19 +88,18 @@ export class AccountService {
     return user;
   }
   async getMe(user: User) {
-    const result = await this.findUserById(user.id);
+    const resume: Resume | null = await this.findResumeByUserId(user.id);
+    const profile_picture = resume
+      ? await getResourceToCloudinary(resume.profile_image!)
+      : null;
+    const result: User | null = await this.findUserById(user.id);
     return result;
   }
 
   async updateResume(user: User, updateUserDto: UpdateResumeDto) {
     updateUserDto.neighbourhood = updateUserDto.neighbourhood?.toLowerCase();
-    const jobSeeker = await prisma.resume.findUnique({
-      where: {
-        userId: user?.id,
-      },
-    });
-    console.log("jobseeker", jobSeeker);
-    if (jobSeeker) {
+    const resume = await this.findResumeByUserId(user.id);
+    if (resume) {
       const updatedUser = await prisma.resume
         .update({
           where: {
@@ -73,6 +131,20 @@ export class AccountService {
     return createdJobSeeker;
   }
 
+  async getResume(user: User) {
+    const resume = await this.findResumeByUserId(user.id);
+    if (!resume)
+      throw ResponseHandler(
+        StatusCodes.NOT_FOUND,
+        false,
+        null,
+        "Resume not found. for create your own resume or upload your resume"
+      );
+    const profile_image = await getResourceToCloudinary(resume.profile_image!);
+    resume.profile_image = profile_image;
+    return resume;
+  }
+
   // helper funciton
   async findUserByEmailAndRole(email: string, role?: Role) {
     const user = await prisma.user.findUnique({
@@ -95,6 +167,14 @@ export class AccountService {
       },
     });
     return user;
+  }
+  async findResumeByUserId(userId: number) {
+    const resume = await prisma.resume.findUnique({
+      where: {
+        userId,
+      },
+    });
+    return resume;
   }
 }
 

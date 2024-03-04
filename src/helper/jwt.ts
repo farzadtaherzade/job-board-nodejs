@@ -13,7 +13,8 @@ export interface Ipayload {
 
 export const signToken = (payload: Ipayload) => {
   const token = jwt.sign(payload, process.env.JWT_SECRET_KEY!, {
-    expiresIn: "3600s",
+    // expiresIn: "3600s",
+    expiresIn: "10d",
   });
   return token;
 };
@@ -46,9 +47,6 @@ export const verifyRefreshToken = async (
       "login to your account"
     );
   const refreshToken: string | number = await getValueFromRedis(`${user.id}`);
-  console.log(refreshToken);
-  console.log("refreshToken : ", refreshToken);
-  console.log("recive token : ", token);
   if (token == refreshToken) return user;
   throw ResponseHandler(
     StatusCodes.UNAUTHORIZED,

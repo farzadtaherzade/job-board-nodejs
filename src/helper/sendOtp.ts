@@ -1,12 +1,6 @@
 import { sendEmail } from "../utils/email";
+import { generateOtp } from "./functions";
 import { getValueFromRedis, setValueToRedis } from "./redis";
-
-const generateOtp = () => {
-  const min = 10000;
-  const max = 99999;
-  const otp = Math.floor(Math.random() * (max - min + 1)) + min;
-  return otp;
-};
 
 export const sendOtp = async (email: string) => {
   // check otp already exist

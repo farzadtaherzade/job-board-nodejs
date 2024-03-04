@@ -3,8 +3,8 @@ import { ClientResponse } from "../exeptions/clientResponse";
 const ResponseHandler = (
   statusCode: number,
   success: boolean,
-  data: any,
-  error: any
+  data: any | null,
+  error: any | null
 ) => {
   const response = new ClientResponse();
   response.success = success;
