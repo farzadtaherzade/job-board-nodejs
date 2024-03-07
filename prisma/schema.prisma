@@ -22,8 +22,7 @@ model User {
   role     Role?  @default(JOBSEEKER)
 
   employer Employer?
-
-  resume Resume?
+  resume   Resume?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
@@ -41,15 +40,16 @@ model Employer {
 
   Company Company?
 
-  user   User @relation(fields: [userId], references: [id])
-  userId Int  @unique
+  user   User  @relation(fields: [userId], references: [id])
+  userId Int   @unique
+  Job    Job[]
 
   @@map("employer")
 }
 
 model Company {
-  id                Int     @id @default(autoincrement())
-  name              String  @unique()
+  id                Int      @id @default(autoincrement())
+  name              String   @unique()
   company_image     String?
   short_description String
   website           String
@@ -57,12 +57,14 @@ model Company {
   about             String
   company_size      Int
   location          String
+  confirm           Boolean? @default(false)
 
   employer   Employer @relation(fields: [employerId], references: [id])
   employerId Int      @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
+  Job       Job[]
 
   @@map("company")
 }
@@ -86,5 +88,42 @@ model Resume {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
 
+  jobRequest JobRequest[]
+
   @@map("resume")
+}
+
+model Job {
+  id                 Int      @id @default(autoincrement())
+  title              String
+  description        String
+  skill_required     String[]
+  salary             String
+  education_required String
+  status             Boolean
+  instantaneous      Boolean? @default(false)
+  conditions         Json
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt()
+
+  company   Company @relation(fields: [companyId], references: [id])
+  companyId Int
+
+  employer   Employer @relation(fields: [employerId], references: [id])
+  employerId Int
+
+  jobRequest JobRequest[]
+
+  @@map("job")
+}
+
+model JobRequest {
+  id    Int @id @default(autoincrement())
+  job   Job @relation(fields: [jobId], references: [id])
+  jobId Int
+
+  resume   Resume @relation(fields: [resumeId], references: [id])
+  resumeId Int
+
+  @@map("job_resume")
 }

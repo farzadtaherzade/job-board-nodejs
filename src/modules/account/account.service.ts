@@ -3,16 +3,13 @@ import { CreateUserDto } from "./dtos/createUser.dto";
 import { StatusCodes } from "http-status-codes";
 import ResponseHandler from "../../helper/response";
 import { UpdateResumeDto } from "./dtos/updateResume.dto";
-import { generateRandomFileName } from "../../helper/functions";
-import path from "path";
-import cloudinary from "../../config/cloudinary";
 import {
   deleteResourceToCloudinary,
   getResourceToCloudinary,
   uploadToCloudinary,
 } from "../../helper/uploadCloudinary";
 
-const prisma = new PrismaClient();
+const prisma: PrismaClient = new PrismaClient();
 
 export class AccountService {
   async uploadResume(user: User, file: Express.Multer.File) {
