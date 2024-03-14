@@ -1,4 +1,4 @@
-export class ClientResponse {
+export class ClientResponse extends Error {
   success: boolean;
   statusCode: number;
   data: any;

@@ -14,6 +14,17 @@ enum Role {
   JOBSEEKER
 }
 
+enum JobStatus {
+  OPEN
+  CLOSED
+}
+
+enum JobRequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
 model User {
   id       Int    @id @default(autoincrement())
   email    String @unique()
@@ -34,37 +45,55 @@ model Employer {
   id        Int    @id @default(autoincrement())
   firstname String
   lastname  String
+  age       Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
 
   Company Company?
 
-  user   User  @relation(fields: [userId], references: [id])
-  userId Int   @unique
-  Job    Job[]
+  user       User         @relation(fields: [userId], references: [id])
+  userId     Int          @unique
+  Job        Job[]
+  JobRequest JobRequest[]
 
   @@map("employer")
 }
 
+model CompanyRequestResponse {
+  id Int @id @default(autoincrement())
+
+  message  String
+  approved Boolean @default(false)
+
+  companyId Int
+  company   Company @relation(fields: [companyId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+}
+
 model Company {
-  id                Int      @id @default(autoincrement())
-  name              String   @unique()
-  company_image     String?
-  short_description String
-  website           String
-  industry          String
-  about             String
-  company_size      Int
-  location          String
-  confirm           Boolean? @default(false)
+  id           Int      @id @default(autoincrement())
+  name         String   @unique()
+  logo         String?
+  description  String
+  website      String
+  industry     String
+  about        String
+  company_size Int
+  location     String
+  confirm      Boolean? @default(false)
 
   employer   Employer @relation(fields: [employerId], references: [id])
   employerId Int      @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
-  Job       Job[]
+
+  Job                    Job[]
+  JobRequest             JobRequest[]
+  CompanyRequestResponse CompanyRequestResponse[]
 
   @@map("company")
 }
@@ -94,17 +123,20 @@ model Resume {
 }
 
 model Job {
-  id                 Int      @id @default(autoincrement())
+  id                 Int       @id @default(autoincrement())
   title              String
   description        String
+  work_days          String
+  benefits           String?
   skill_required     String[]
   salary             String
   education_required String
-  status             Boolean
-  instantaneous      Boolean? @default(false)
-  conditions         Json
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt()
+  status             JobStatus @default(OPEN)
+  open               Boolean   @default(false)
+  instantaneous      Boolean?  @default(false)
+  conditions         String
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt()
 
   company   Company @relation(fields: [companyId], references: [id])
   companyId Int
@@ -118,12 +150,24 @@ model Job {
 }
 
 model JobRequest {
-  id    Int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
+
+  message String?
+  status  JobRequestStatus @default(PENDING)
+
   job   Job @relation(fields: [jobId], references: [id])
   jobId Int
 
+  company   Company @relation(fields: [companyId], references: [id])
+  companyId Int
+
   resume   Resume @relation(fields: [resumeId], references: [id])
   resumeId Int
+
+  employer   Employer @relation(fields: [employerId], references: [id])
+  employerId Int
+
+  createdAt DateTime @default(now())
 
   @@map("job_resume")
 }

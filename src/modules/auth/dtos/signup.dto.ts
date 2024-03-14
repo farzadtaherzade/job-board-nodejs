@@ -26,9 +26,5 @@ export class SignupDto {
   @IsMobilePhone("fa-IR")
   phone: string;
 
-  @IsEnum({
-    JOBSEEKE: Role.JOBSEEKER,
-    EMPLOYER: Role.EMPLOYER,
-  })
   role: Role;
 }

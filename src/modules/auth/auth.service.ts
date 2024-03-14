@@ -77,6 +77,3 @@ export class AuthService {
     };
   }
 }
-
-// "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZhcnphZHBzNDRnYW1lQGdtYWlsLmNvbSIsInN1YiI6MSwiaWF0IjoxNzA4NjU0NDU2LCJleHAiOjE3MDg2NTgwNTZ9.WSftLNLZ4Qbbw3UFJuY0M6Vw0YpUnabZtoxMRFQLFvg",
-// "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZhcnphZHBzNDRnYW1lQGdtYWlsLmNvbSIsInN1YiI6MSwiaWF0IjoxNzA4NjU0NDU2LCJleHAiOjE3MDk1MTg0NTZ9.UDVBeafSwi4xI8W-dvEZ_Xg_rY3ZOISJDdfBcd5I_G8"

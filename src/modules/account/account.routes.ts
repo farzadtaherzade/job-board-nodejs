@@ -8,23 +8,27 @@ import { upload } from "../../utils/multer";
 const accountRouter: Router = Router();
 const accountController: AccountController = new AccountController();
 
-accountRouter.get("/me", Authorization, accountController.getMe);
-accountRouter.get("/resume", Authorization, accountController.getResume);
+accountRouter.get("/me", Authorization("JOBSEEKER"), accountController.getMe);
+accountRouter.get(
+  "/resume",
+  Authorization("JOBSEEKER"),
+  accountController.getResume
+);
 accountRouter.put(
   "/resume",
-  Authorization,
+  Authorization("JOBSEEKER"),
   ValidateBody(UpdateResumeDto),
   accountController.updateResume
 );
 accountRouter.patch(
   "/upload/pic",
-  Authorization,
-  upload.single("pic"),
+  Authorization("JOBSEEKER"),
+  upload.single("image"),
   accountController.uploadProfile
 );
 accountRouter.patch(
   "/upload/resume",
-  Authorization,
+  Authorization("JOBSEEKER"),
   upload.single("resume"),
   accountController.uploadProfile
 );
