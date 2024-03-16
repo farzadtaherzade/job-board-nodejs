@@ -5,6 +5,7 @@ import accountRouter from "../modules/account/account.routes";
 import employerRouter from "../modules/employer/employer.routes";
 import companyRouter from "../modules/company/company.routes";
 import jobRouter from "../modules/jobs/jobs.routes";
+import adminRouter from "../modules/admin/admin.routes";
 const router: Router = Router();
 router.use("/", homeRouter);
 router.use("/auth", authRouter);
@@ -12,5 +13,6 @@ router.use("/user", accountRouter);
 router.use("/employer", employerRouter);
 router.use("/company", companyRouter);
 router.use("/job", jobRouter);
+router.use("/admin", adminRouter);
 
 export default router;
