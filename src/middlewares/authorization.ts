@@ -18,6 +18,7 @@ export const Authorization = (...roles: Role[]) => {
           },
           include: {
             employer: true,
+            resume: true
           },
         });
         if (!user)

@@ -4,14 +4,14 @@ import { CompanyService, Sort } from "./company.service";
 import { StatusCodes } from "http-status-codes";
 import ResponseHandler from "../../helper/response";
 import { UpdateCompanyDto } from "./dtos/updateCompany.dto";
-import { UserWithEmployer } from "../../types/type";
+import { IUser } from "../../types/type";
 
 const companyService: CompanyService = new CompanyService();
 
 export class CompanyController {
   async createCompany(req: Request, res: Response, next: NextFunction) {
     try {
-      const user: UserWithEmployer | undefined = req.user;
+      const user: IUser | undefined = req.user;
       const file: Express.Multer.File | undefined = req.file;
       const createCompanyDto = req.body;
       const createCompany = await companyService.createCompany(
@@ -29,7 +29,7 @@ export class CompanyController {
 
   async myCompany(req: Request, res: Response, next: NextFunction) {
     try {
-      const user: UserWithEmployer | undefined = req.user;
+      const user: IUser | undefined = req.user;
       const company = await companyService.myCompany(user!);
 
       return res
@@ -67,7 +67,7 @@ export class CompanyController {
 
   async updateCompany(req: Request, res: Response, next: NextFunction) {
     try {
-      const user: UserWithEmployer | undefined = req.user;
+      const user: IUser | undefined = req.user;
       const updateCompanyDto: UpdateCompanyDto = req.body;
       const updateCompany = await companyService.updateCompany(
         updateCompanyDto,
@@ -83,7 +83,7 @@ export class CompanyController {
 
   async changeLogo(req: Request, res: Response, next: NextFunction) {
     try {
-      const user: UserWithEmployer | undefined = req.user;
+      const user: IUser | undefined = req.user;
       const file: Express.Multer.File | undefined = req.file;
       const changeLogo = await companyService.changeLogo(user!, file!);
       return res

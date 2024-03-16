@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -14,9 +15,22 @@ enum Role {
   JOBSEEKER
 }
 
+enum Type {
+  FULLTIME
+  PARTTIME
+  INTERSHIP
+  JOBSEEKER
+}
+
 enum JobStatus {
   OPEN
   CLOSED
+}
+
+enum Experience {
+  JUNIOR
+  MIDLEVEL
+  SENIOR
 }
 
 enum JobRequestStatus {
@@ -123,20 +137,18 @@ model Resume {
 }
 
 model Job {
-  id                 Int       @id @default(autoincrement())
-  title              String
-  description        String
-  work_days          String
-  benefits           String?
-  skill_required     String[]
-  salary             String
-  education_required String
-  status             JobStatus @default(OPEN)
-  open               Boolean   @default(false)
-  instantaneous      Boolean?  @default(false)
-  conditions         String
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt()
+  id             Int        @id @default(autoincrement())
+  title          String
+  short_desc     String     @db.VarChar(150)
+  description    String
+  skill_required String[]
+  salary         Int
+  status         JobStatus  @default(OPEN)
+  type           Type
+  experience     Experience
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
 
   company   Company @relation(fields: [companyId], references: [id])
   companyId Int

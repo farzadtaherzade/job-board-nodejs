@@ -1,14 +1,15 @@
-import { Employer, User } from "@prisma/client";
+import { Employer, Resume, User } from "@prisma/client";
 declare global {
   namespace Express {
     export interface Request {
-      user?: UserWithEmployer;
+      user?: IUser;
     }
   }
 }
 
-export interface UserWithEmployer extends User {
+export interface IUser extends User {
   employer: Employer | null;
+  resume: Resume | null
 }
 
 export interface CloudinaryFile extends Express.Multer.File {

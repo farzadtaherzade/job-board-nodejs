@@ -7,7 +7,7 @@ import {
   deleteResourceToCloudinary,
   uploadToCloudinary,
 } from "../../helper/uploadCloudinary";
-import { UserWithEmployer } from "../../types/type";
+import { IUser } from "../../types/type";
 import { compareArrays } from "@mikro-orm/core";
 
 const prisma: PrismaClient = new PrismaClient();
@@ -20,7 +20,7 @@ export enum Sort {
 export class CompanyService {
   async createCompany(
     createCompanyDto: CreateCompanyDto,
-    user: UserWithEmployer,
+    user: IUser,
     file: Express.Multer.File
   ) {
     createCompanyDto.company_size = +createCompanyDto.company_size;
@@ -48,7 +48,7 @@ export class CompanyService {
 
   async updateCompany(
     updateCompanyDto: UpdateCompanyDto,
-    user: UserWithEmployer
+    user: IUser
   ) {
     if (!user.employer) {
       throw new Error("Employer information is missing");
@@ -64,7 +64,7 @@ export class CompanyService {
     });
     return update;
   }
-  async changeLogo(user: UserWithEmployer, file: Express.Multer.File) {
+  async changeLogo(user: IUser, file: Express.Multer.File) {
     if (!user.employer) {
       throw new Error("Employer information is missing");
     }
@@ -85,7 +85,7 @@ export class CompanyService {
     return update;
   }
 
-  async myCompany(user: UserWithEmployer) {
+  async myCompany(user: IUser) {
     if (!user.employer) {
       throw new Error("Employer information is missing");
     }
@@ -93,7 +93,7 @@ export class CompanyService {
     return company;
   }
 
-  async remove(user: UserWithEmployer) {
+  async remove(user: IUser) {
     if (!user.employer) {
       throw new Error("Employer information is missing");
     }

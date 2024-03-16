@@ -5,46 +5,44 @@ import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
 } from "class-validator";
 
-export class CreateJobDto {
+export class UpdateJobDto {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   title: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   description: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   short_desc: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   work_days: string;
 
   @IsArray()
-  @IsNotEmpty()
+  @IsOptional()
   skill_required: string[];
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   salary: number;
 
   @IsEnum(JobStatus)
-  @IsNotEmpty()
+  @IsOptional()
   status: JobStatus;
 
   @IsEnum(Experience)
-  @IsNotEmpty()
+  @IsOptional()
   experience: Experience;
 
   @IsEnum(Type)
-  @IsNotEmpty()
+  @IsOptional()
   type: Type;
-
-  employerId: number;
-  companyId: number;
 }

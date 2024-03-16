@@ -14,11 +14,3 @@ export const generateOtp = () => {
   const otp = Math.floor(Math.random() * (max - min + 1)) + min;
   return otp;
 };
-
-// export const generateOtp = (length: number) => {
-//   let otp = '';
-//   for (let i = 0; i < length; i++) {
-//     otp += Math.floor(Math.random() * 10); // Generates a random digit from 0 to 9
-//   }
-//   return otp;
-// };
