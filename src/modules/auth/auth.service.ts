@@ -23,7 +23,7 @@ export class AuthService {
     const user = await accountService.createUser(signupDto);
     return "created";
   }
-  async signin(signinDto: SigninDto, role: Role) {
+  async signin(signinDto: SigninDto) {
     const ex_otp: any = process.env.EXPIRED_OTP_TIME;
     const error = ResponseHandler(
       StatusCodes.BAD_REQUEST,
@@ -56,9 +56,8 @@ export class AuthService {
     console.log(sendOtpResult);
     if (sendOtpResult === 0) {
       const ttl = await getTtlOfKey(user.email);
-      return `code already send to your account! code was sended ${
-        ex_otp * 60 - ttl
-      } second ago use same one`;
+      return `code already send to your account! code was sended ${ex_otp * 60 - ttl
+        } second ago use same one`;
     }
 
     return "otp sended successfully";

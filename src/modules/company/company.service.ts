@@ -8,7 +8,6 @@ import {
   uploadToCloudinary,
 } from "../../helper/uploadCloudinary";
 import { IUser } from "../../types/type";
-import { compareArrays } from "@mikro-orm/core";
 
 const prisma: PrismaClient = new PrismaClient();
 

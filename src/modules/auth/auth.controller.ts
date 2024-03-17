@@ -31,7 +31,7 @@ export class AuthController {
   async signin(req: Request, res: Response, next: NextFunction) {
     try {
       const signinDto: SigninDto = req.body;
-      const data = await authService.signin(signinDto, "JOBSEEKER");
+      const data = await authService.signin(signinDto);
       return res
         .status(StatusCodes.OK)
         .json(ResponseHandler(StatusCodes.OK, true, data, null));
@@ -62,7 +62,7 @@ export class AuthController {
   async signinEmployers(req: Request, res: Response, next: NextFunction) {
     try {
       const signinDto: SigninDto = req.body;
-      const data = await authService.signin(signinDto, "EMPLOYER");
+      const data = await authService.signin(signinDto);
       return res
         .status(200)
         .json(ResponseHandler(StatusCodes.OK, true, data, null));

@@ -31,7 +31,7 @@ authRouter.post(
   ValidateBody(SigninDto),
   authController.signin
 );
-
+// refresh token route
 authRouter.post("/refresh", authController.refreshToken);
 
 export default authRouter;
